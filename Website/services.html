@@ -17,13 +17,19 @@
         <img src="assets/logo.svg" alt="ACE Tutoring Logo" />
         <span>ACE Tutor</span>
       </a>
+      <button class="menu-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <ul class="nav-links">
         <li><a href="about.html">About</a></li>
         <li><a href="services.html">Services</a></li>
         <li><a href="get-started.html">Get Started</a></li>
         <li><a href="contact.html">Contact</a></li>
+        <li class="mobile-only"><a href="get-started.html" class="btn">Book Now</a></li>
       </ul>
-      <a href="get-started.html" class="btn">Book Now</a>
+      <a href="get-started.html" class="btn desktop-only">Book Now</a>
     </nav>
   </header>
 
@@ -529,6 +535,26 @@
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          this.classList.toggle('active');
+          navLinks.classList.toggle('active');
+          document.body.style.overflow = this.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          link.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+          });
+        });
+      }
       // Add scroll down button
       const scrollDownBtn = document.createElement('div');
       scrollDownBtn.className = 'scroll-down';
