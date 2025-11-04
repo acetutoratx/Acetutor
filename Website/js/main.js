@@ -1,23 +1,58 @@
 // js/main.js
 document.addEventListener('DOMContentLoaded', () => {
-  // Mobile menu toggle
+  // Mobile menu toggle with better iOS support
   const menuToggle = document.querySelector('.menu-toggle');
   const navLinks = document.querySelector('.nav-links');
   
   if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', () => {
-      menuToggle.classList.toggle('active');
+    // Toggle menu on button click
+    const toggleMenu = () => {
+      const isOpen = menuToggle.classList.toggle('active');
       navLinks.classList.toggle('active');
-      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+      
+      // Prevent background scrolling when menu is open
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+      } else {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+      }
+    };
+    
+    // Add touch event for better mobile support
+    menuToggle.addEventListener('click', toggleMenu);
+    menuToggle.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      toggleMenu();
     });
     
     // Close menu when clicking on a nav link
+    const closeMenu = () => {
+      menuToggle.classList.remove('active');
+      navLinks.classList.remove('active');
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+    
     document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        menuToggle.classList.remove('active');
-        navLinks.classList.remove('active');
-        document.body.style.overflow = '';
+      link.addEventListener('click', closeMenu);
+      link.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        closeMenu();
+        // Navigate to the link's href
+        window.location.href = link.href;
       });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navbar') && navLinks.classList.contains('active')) {
+        closeMenu();
+      }
     });
   }
   
